@@ -1,0 +1,10 @@
+{
+  "version": "v14.3.5",
+  "updated_at": "2026-07-29T01:05:00+08:00",
+  "release_mode": "embedded-pako-base64-gzip-compat",
+  "source_payload": "../v1434/chunk-01..11.js",
+  "research_tables": 40,
+  "static_controls": 40,
+  "static_hints": 40,
+  "pako_chunks": 6
+}
