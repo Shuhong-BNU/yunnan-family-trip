@@ -1,0 +1,19 @@
+.table-view-toggle{display:none}
+@media(max-width:700px){
+.archive-table-scroll,.archive-content .tbl-scroll{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-x pan-y!important;overscroll-behavior-x:contain!important;scrollbar-width:auto}
+.archive-table-scroll table,.archive-content .tbl-scroll table{max-width:none!important;table-layout:auto!important}
+.table-view-toggle{position:sticky;left:0;z-index:4;display:flex;gap:6px;align-items:center;width:100%;min-width:100%;padding:7px 8px;background:#f7f4fc;border-bottom:1px solid #e6e0f0}
+.table-view-toggle button{border:1px solid #d9d0ea;background:#fff;color:#574a69;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:750;line-height:1.2}
+.table-view-toggle button.active{background:#5b3ea6;color:#fff;border-color:#5b3ea6}
+.table-view-toggle .table-tip{margin-left:auto;font-size:11px;color:#746c7d;white-space:nowrap}
+.archive-table-scroll.table-card-mode,.archive-content .tbl-scroll.table-card-mode{overflow:visible!important;border:0!important;background:transparent!important}
+.table-card-mode table,.table-card-mode tbody{display:block!important;width:100%!important;min-width:0!important;max-width:100%!important}
+.table-card-mode tr{display:block!important;width:100%!important;margin:0 0 10px!important;padding:8px 10px!important;background:#fff!important;border:1px solid #e5e0ef!important;border-radius:12px!important;box-shadow:0 2px 7px rgba(55,40,80,.04)}
+.table-card-mode tr.table-header-row{display:none!important}
+.table-card-mode th{display:none!important}
+.table-card-mode td{display:grid!important;grid-template-columns:minmax(92px,36%) minmax(0,1fr)!important;width:100%!important;max-width:100%!important;min-width:0!important;padding:8px 2px!important;border:0!important;border-bottom:1px dashed #e7e2ed!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important;background:transparent!important;text-align:left!important}
+.table-card-mode td:last-child{border-bottom:0!important}
+.table-card-mode td::before{content:attr(data-label);font-weight:850;color:#4c328d;padding-right:9px;line-height:1.45}
+.table-card-mode .archive-scroll-hint,.table-card-mode .scroll-hint{display:none!important}
+.table-scroll-mode .archive-scroll-hint,.table-scroll-mode .scroll-hint{display:block!important;position:sticky;left:0}
+}
