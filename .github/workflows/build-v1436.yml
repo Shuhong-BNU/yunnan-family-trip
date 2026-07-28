@@ -1,0 +1,36 @@
+name: Build v14.3.6 direct static release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/build-v1436.mjs
+      - .github/workflows/build-v1436.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-direct-static-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build direct static HTML
+        run: node scripts/build-v1436.mjs
+      - name: Commit generated release
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add v1436/index.html v1436/version.json index.html version.json README.md
+          if git diff --cached --quiet; then
+            echo "No generated changes"
+            exit 0
+          fi
+          git commit -m "release: generate v14.3.6 direct static Pages build"
+          git push
