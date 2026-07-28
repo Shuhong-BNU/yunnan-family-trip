@@ -1,5 +1,9 @@
 {
-  "latest": "v14.3.3",
-  "updated_at": "2026-07-29T00:08:00+08:00",
-  "path": "./v1433/"
+  "latest": "v14.3.4",
+  "updated_at": "2026-07-29T00:22:00+08:00",
+  "path": "./v1434/",
+  "release_mode": "static-controls-in-payload",
+  "research_tables": 40,
+  "static_controls": 40,
+  "static_hints": 40
 }
