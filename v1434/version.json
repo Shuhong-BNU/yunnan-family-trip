@@ -1,0 +1,9 @@
+{
+  "version": "v14.3.4",
+  "updated_at": "2026-07-29T00:22:00+08:00",
+  "release_mode": "static-controls-in-payload",
+  "research_tables": 40,
+  "static_controls": 40,
+  "static_hints": 40,
+  "chunks": 11
+}
