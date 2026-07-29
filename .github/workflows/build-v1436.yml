@@ -5,12 +5,12 @@ on:
     branches: [main]
     paths:
       - scripts/build-v1436.mjs
+      - v1436_fixed_payload/**
       - .github/workflows/build-v1436.yml
   workflow_dispatch:
 
 permissions:
   contents: write
-  issues: write
 
 jobs:
   build-direct-static-release:
@@ -24,88 +24,17 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Build direct static HTML
-        id: build
-        shell: bash
-        run: |
-          set +e
-          node scripts/build-v1436.mjs > /tmp/v1436-build.log 2>&1
-          code=$?
-          cat /tmp/v1436-build.log
-          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
-          exit 0
+      - name: Build and verify direct static HTML
+        run: node scripts/build-v1436.mjs
 
-      - name: Commit generated release
-        id: publish
-        if: steps.build.outputs.exit_code == '0'
-        shell: bash
+      - name: Commit generated release when changed
         run: |
-          set +e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add v1436/index.html v1436/version.json index.html version.json README.md
           if git diff --cached --quiet; then
-            echo "No generated changes" > /tmp/v1436-publish.log
-            code=0
-          else
-            {
-              git commit -m "release: generate v14.3.6 direct static Pages build"
-              git push
-            } > /tmp/v1436-publish.log 2>&1
-            code=$?
+            echo "Generated release already matches the verified source."
+            exit 0
           fi
-          cat /tmp/v1436-publish.log
-          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
-          exit 0
-
-      - name: Publish diagnostic issue
-        if: always()
-        uses: actions/github-script@v7
-        env:
-          BUILD_EXIT: ${{ steps.build.outputs.exit_code }}
-          PUBLISH_EXIT: ${{ steps.publish.outputs.exit_code }}
-        with:
-          script: |
-            const fs = require('fs');
-            const read = (path) => fs.existsSync(path) ? fs.readFileSync(path, 'utf8') : '(not created)';
-            const build = read('/tmp/v1436-build.log');
-            const publish = read('/tmp/v1436-publish.log');
-            const body = [
-              `Run: ${context.runId}`,
-              `Commit: ${context.sha}`,
-              `Build exit: ${process.env.BUILD_EXIT || '(missing)'}`,
-              `Publish exit: ${process.env.PUBLISH_EXIT || '(not run)'}`,
-              '',
-              '## Build log',
-              '```text',
-              build.slice(-12000),
-              '```',
-              '',
-              '## Publish log',
-              '```text',
-              publish.slice(-12000),
-              '```',
-            ].join('\n');
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: `[automation] v14.3.6 diagnostic ${context.runId}`,
-              body,
-            });
-
-      - name: Enforce success
-        if: always()
-        shell: bash
-        run: |
-          build='${{ steps.build.outputs.exit_code }}'
-          publish='${{ steps.publish.outputs.exit_code }}'
-          if [ "$build" != "0" ]; then
-            echo "Build failed with exit $build"
-            exit 1
-          fi
-          if [ -n "$publish" ] && [ "$publish" != "0" ]; then
-            echo "Publish failed with exit $publish"
-            exit 1
-          fi
-
-# Diagnostic trigger: 2026-07-29T09:45:00+08:00
+          git commit -m "release: generate v14.3.6 direct static Pages build"
+          git push
