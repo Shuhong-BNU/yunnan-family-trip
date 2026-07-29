@@ -9,7 +9,6 @@ const UPDATED_TEXT = '2026-07-29 09:19（UTC+8）';
 const UPDATED_ISO = '2026-07-29T09:19:00+08:00';
 const EXPECTED_SHA256 = 'a8ecc4b3d7a420481e90b7537ba5c46eb8d1d21d5558105045c777ac4cb3947a';
 const EXPECTED_BASE64_LENGTH = 77420;
-const EXPECTED_SEGMENTS = 20;
 
 const root = process.cwd();
 const sourceDir = path.join(root, 'v1436_fixed_payload');
@@ -31,25 +30,23 @@ function fail(message) {
 }
 
 let payloadB64 = '';
-let segmentCount = 0;
+let physicalSegmentCount = 0;
 const payloadDiagnostics = [];
 for (const file of payloadFiles) {
   const filePath = path.join(sourceDir, file);
   if (!fs.existsSync(filePath)) fail(`Missing verified payload file: ${file}`);
   const source = fs.readFileSync(filePath, 'utf8');
   const matches = [...source.matchAll(/\+\s*"([A-Za-z0-9+/=]+)"/g)];
+  if (matches.length < 1) fail(`No payload content found in ${file}`);
   const lengths = matches.map((match) => match[1].length);
-  payloadDiagnostics.push({ file, segments: matches.length, lengths, total: lengths.reduce((a, b) => a + b, 0) });
+  payloadDiagnostics.push({ file, physicalSegments: matches.length, lengths, total: lengths.reduce((a, b) => a + b, 0) });
   for (const match of matches) {
     payloadB64 += match[1];
-    segmentCount += 1;
+    physicalSegmentCount += 1;
   }
 }
-console.log(JSON.stringify({ payloadDiagnostics, segmentCount, base64Length: payloadB64.length }, null, 2));
+console.log(JSON.stringify({ payloadDiagnostics, physicalSegmentCount, base64Length: payloadB64.length }, null, 2));
 
-if (segmentCount !== EXPECTED_SEGMENTS) {
-  fail(`Payload segment count mismatch: expected ${EXPECTED_SEGMENTS}, got ${segmentCount}; details=${JSON.stringify(payloadDiagnostics)}`);
-}
 if (payloadB64.length !== EXPECTED_BASE64_LENGTH) {
   fail(`Payload Base64 length mismatch: expected ${EXPECTED_BASE64_LENGTH}, got ${payloadB64.length}; details=${JSON.stringify(payloadDiagnostics)}`);
 }
@@ -95,7 +92,9 @@ const releaseManifest = {
   version: VERSION,
   updated_at: UPDATED_ISO,
   release_mode: 'github-actions-direct-static-html',
-  source_payload: 'v1436_fixed_payload / 20 verified segments',
+  source_payload: 'v1436_fixed_payload / 20 logical segments',
+  physical_segment_count: physicalSegmentCount,
+  base64_length: payloadB64.length,
   sha256,
   ...checks,
 };
@@ -106,4 +105,4 @@ fs.writeFileSync(path.join(root, 'index.html'), rootIndex, 'utf8');
 fs.writeFileSync(path.join(root, 'version.json'), `${JSON.stringify({ latest: VERSION, updated_at: UPDATED_ISO, path: `./${VERSION_DIR}/`, release_mode: 'github-actions-direct-static-html', sha256, ...checks }, null, 2)}\n`, 'utf8');
 fs.writeFileSync(path.join(root, 'README.md'), `# 云南旅行方案 · ${VERSION}\n\n最新版更新时间：${UPDATED_TEXT}\n\n## 最新版\n\n\`https://shuhong-bnu.github.io/yunnan-family-trip/${VERSION_DIR}/\`\n\n根目录会自动跳转到上述版本地址。\n\n## ${VERSION} 更新\n\n- GitHub Actions 仅在仓库端还原并校验完整 HTML，GitHub Pages 直接返回普通静态网页。\n- 浏览器端不再使用 Base64、gzip、DecompressionStream、pako、atob、eval、document.write 或正文分块。\n- 40 个研究表格均直接包含“卡片查看 / 横向表格”按钮和左右滑动提示。\n- 最终 HTML SHA-256：\`${sha256}\`。\n- 公开版继续移除姓名、关系称呼、年龄、明确人数和任务负责人信息。\n`, 'utf8');
 
-console.log(JSON.stringify({ version: VERSION, updated: UPDATED_ISO, segmentCount, base64Length: payloadB64.length, sha256, ...checks }, null, 2));
+console.log(JSON.stringify({ version: VERSION, updated: UPDATED_ISO, physicalSegmentCount, base64Length: payloadB64.length, sha256, ...checks }, null, 2));
