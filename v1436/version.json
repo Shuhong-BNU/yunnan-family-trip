@@ -1,8 +1,10 @@
 {
-  "latest": "v14.3.6",
+  "version": "v14.3.6",
   "updated_at": "2026-07-29T09:19:00+08:00",
-  "path": "./v1436/",
   "release_mode": "github-actions-direct-static-html",
+  "source_payload": "v1436_fixed_payload / 20 logical segments",
+  "physical_segment_count": 19,
+  "base64_length": 77420,
   "sha256": "a8ecc4b3d7a420481e90b7537ba5c46eb8d1d21d5558105045c777ac4cb3947a",
   "outputBytes": 244983,
   "researchTables": 40,

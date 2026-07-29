@@ -1,26 +1,17 @@
-# 云南旅行方案 · v14.3.5
+# 云南旅行方案 · v14.3.6
 
-最新版更新时间：2026-07-29 01:05（UTC+8）
+最新版更新时间：2026-07-29 09:19（UTC+8）
 
 ## 最新版
 
-`https://shuhong-bnu.github.io/yunnan-family-trip/v1435/`
+`https://shuhong-bnu.github.io/yunnan-family-trip/v1436/`
 
 根目录会自动跳转到上述版本地址。
 
-## v14.3.5 更新
+## v14.3.6 更新
 
-- 修复 v14.3.4 在部分 Safari、微信内置浏览器中因不支持 `DecompressionStream` 而整页加载失败的问题。
-- 改用仓库内嵌的 pako 兼容解压，不依赖外部 CDN，也不再调用 `DecompressionStream`。
-- 继续复用 v14.3.4 已静态固化的 40 个研究表格控件、40 个滑动提示和 773 个字段标签。
-- 手机端普通研究表格默认显示为“列名＋内容”的卡片，可切换回横向表格。
-- 使用独立 `/v1435/` 地址，根入口、版本清单、页面顶部、需求全景和版本演进同步更新。
-- 新错误页会显示具体错误文本，便于继续定位极少数兼容问题。
-
-## 隐私处理
-
-公开版已移除姓名、关系称呼、年龄、明确人数和任务负责人信息，并禁止搜索引擎索引。GitHub Pages 网址本身仍为公开访问。
-
-## 第三方许可
-
-兼容加载器内嵌 pako 0.2.9，MIT License 见 `v1435/PAKO_LICENSE.txt`。
+- GitHub Actions 仅在仓库端还原并校验完整 HTML，GitHub Pages 直接返回普通静态网页。
+- 浏览器端不再使用 Base64、gzip、DecompressionStream、pako、atob、eval、document.write 或正文分块。
+- 40 个研究表格均直接包含“卡片查看 / 横向表格”按钮和左右滑动提示。
+- 最终 HTML SHA-256：`a8ecc4b3d7a420481e90b7537ba5c46eb8d1d21d5558105045c777ac4cb3947a`。
+- 公开版继续移除姓名、关系称呼、年龄、明确人数和任务负责人信息。
